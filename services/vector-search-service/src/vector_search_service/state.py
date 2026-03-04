@@ -14,12 +14,16 @@ class ServiceState:
     index_version: int = 0
     last_checkpoint_at: str | None = None
 
-    def status_payload(self) -> dict[str, object]:
+    def bump_index_version(self, applied_count: int) -> None:
+        if applied_count > 0:
+            self.index_version += applied_count
+
+    def status_payload(self, queue_depth: int, worker_status: str) -> dict[str, object]:
         return {
             "index_size": len(self.index),
             "index_version": self.index_version,
-            "queue_depth": 0,
-            "worker": "not_configured",
+            "queue_depth": queue_depth,
+            "worker": worker_status,
             "last_checkpoint_at": self.last_checkpoint_at,
         }
 
