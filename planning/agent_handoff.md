@@ -1,38 +1,42 @@
-# Agent Handoff Package (Phase 1)
+# Agent Handoff Package
 
 ## Purpose
-This document is the standard brief for any orchestrator or human running parallel Phase 1 delivery.
+This is the standard brief for orchestrators or humans running parallel delivery.
 
 ## Fixed Inputs
 - PRD: `docs/PRD.md`
-- API and lifecycle contracts: `docs/architecture/contracts.md`
-- Jira list: `planning/jira_phase1.csv`
-- Dependency graph: `planning/jira_phase1_dependencies.csv`
-- Parallel plan: `planning/parallelization.md`
+- Contracts: `docs/architecture/contracts.md`
+- Tracking guide: `planning/tracking_guide.md`
+
+## Phase 1 Files
+- Ticket list: `planning/jira_phase1.csv`
+- Dependencies: `planning/jira_phase1_dependencies.csv`
+- Tracker: `planning/jira_phase1_tracker.csv`
+- Parallelization plan: `planning/parallelization.md`
+
+## Phase 2 Files
+- Ticket list: `planning/jira_phase2.csv`
+- Dependencies: `planning/jira_phase2_dependencies.csv`
+- Tracker: `planning/jira_phase2_tracker.csv`
+- Parallelization plan: `planning/parallelization_phase2.md`
 
 ## Rules for All Agents
-- Do not change frozen contracts from `P1-00` without a tracked contract-change ticket.
+- Do not change frozen contracts without a dedicated contract-change ticket.
 - Stay within assigned ticket scope and ownership boundaries.
 - Add tests for all behavior changes.
 - Keep implementation readable over micro-optimizations.
+- Update tracker CSV status on every state change.
 
 ## Standard Agent Prompt Template
-Use this template for each assigned ticket:
-
-"Implement `<TICKET_KEY>` from `planning/jira_phase1.csv`.
+"Implement `<TICKET_KEY>` from the phase ticket CSV.
 Follow contracts in `docs/architecture/contracts.md`.
-Respect dependencies in `planning/jira_phase1_dependencies.csv`.
+Respect dependency edges from `<phase>_dependencies.csv`.
+Update `<phase>_tracker.csv` for status transitions.
 Do not modify unrelated modules.
 Deliver code + tests + short change summary + known risks."
 
 ## Gate Checks Before Merge
-- Ticket acceptance criteria satisfied.
+- Acceptance criteria satisfied.
 - Tests pass locally and in CI.
-- No contract drift from `P1-00`.
-- Changelog/notes updated where needed.
-
-## Example Assignment Split (4 agents)
-- Agent A: `P1-01`, `P1-02`, `P1-03`
-- Agent B: `P1-04`, `P1-07`
-- Agent C: `P1-05`
-- Agent D: `P1-06`, `P1-08`, `P1-09`
+- No contract drift.
+- Tracker fields updated (`Status`, `PRURL`, `MergeCommit`, `Tests`).

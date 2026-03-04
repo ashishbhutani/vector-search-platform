@@ -1,0 +1,11 @@
+Key,Status,BlockedBy,Assignee,Worktree,Branch,PRURL,MergeCommit,Tests,DocsUpdated,LastUpdatedUTC,Notes
+P1-00,todo,,unassigned,wt-foundation,, , ,pending,n/a,,
+P1-01,todo,P1-00,unassigned,wt-core,, , ,pending,no,,
+P1-02,todo,P1-00,unassigned,wt-core,, , ,pending,no,,
+P1-03,todo,P1-00,unassigned,wt-core,, , ,pending,no,,
+P1-04,todo,P1-00,unassigned,wt-service-api,, , ,pending,no,,
+P1-05,todo,P1-00,unassigned,wt-service-ingest,, , ,pending,no,,
+P1-06,todo,P1-00,unassigned,wt-qa,, , ,pending,no,,
+P1-07,todo,P1-01|P1-03|P1-04|P1-05,unassigned,wt-cli,, , ,pending,no,,
+P1-08,todo,P1-04|P1-05|P1-06|P1-07,unassigned,wt-qa,, , ,pending,no,,
+P1-09,todo,P1-01|P1-04|P1-05,unassigned,wt-qa,, , ,pending,no,,

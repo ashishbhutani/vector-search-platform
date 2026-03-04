@@ -1,0 +1,11 @@
+Key,Summary,Epic,Description,OwnerRole,ParallelGroup,EstimatePoints,AcceptanceCriteria
+P2-00,Distributed contracts freeze,Phase2-Distributed,Freeze gateway shard router and shard node contracts before parallel implementation.,Platform,A,3,Distributed contracts are documented and approved.
+P2-01,ShardRouter interface and config wiring,Phase2-Distributed,Implement route_for_ingest and route_for_query abstraction with strategy selection config.,Platform,A,5,Router interface is pluggable and covered by tests.
+P2-02,Hash routing strategies,Phase2-Distributed,Implement hash_tenant_or_doc and hash_vector_id routing strategies.,Core,A,5,Routing determinism tests pass.
+P2-03,Semantic LSH routing strategy,Phase2-Distributed,Implement semantic_lsh routing and bootstrap artifact support.,Core,A,8,Semantic top-N routing works with tests.
+P2-04,Gateway fanout and top-k combiner,Phase2-Distributed,Implement gateway parallel shard fanout timeout handling and global merge logic.,Service,B,8,Gateway returns correct merged top-k.
+P2-05,Shard node service mode,Phase2-Distributed,Add shard-node runtime mode and shard-scoped query/ingest behavior.,Service,B,5,Shard node runs and serves shard-local operations.
+P2-06,Shard map and health registry,Phase2-Distributed,Implement shard map loading and basic node health checks for gateway routing.,Service,B,5,Gateway routes only to healthy shard nodes.
+P2-07,Distributed integration test suite,Phase2-QA,Add multi-node local tests for gateway and shard nodes end-to-end.,QA,C,8,Distributed E2E tests are green.
+P2-08,Partial failure and timeout behavior,Phase2-QA,Implement and test partial_results and timeout policies under shard failures.,QA,C,5,Failure-mode tests pass with expected response flags.
+P2-09,Distributed benchmark scripts,Phase2-QA,Add distributed benchmark runs and report p50 p95 throughput and fanout stats.,Perf,C,3,Benchmark outputs generated and documented.
