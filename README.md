@@ -1,19 +1,28 @@
-1. We have to implement HNSW algorithm (Hierarchical Navigable Small World graphs) in python
-2. arxiv: https://arxiv.org/pdf/1603.09320
-3. simpler explanantion: https://www.pinecone.io/learn/series/faiss/hnsw/
-4. Why do we need to do that ? eventually i want to create a vector DB. this will
-be one of the algorithm supported by the vector DB. but we will add more algos.
-5. We want a simpler implenentation, clean and easy to read even if not the
-   most efficient.
-6. we will like to have test cases to check functionality with different inputs
-7. we will like to have test cases to compare its precision/recall against
-   a golden data set i.e. comparing approximate nearest neighbour search result
-to a brute force search or kNN
-8. we will like to have benchmarking of time taken to insert vectors, single or
-   batch and time taken to retrieve.
-9. we will like to have capability to insert new vectors without doing
-   a rebuild
-10. we will like to have option for different distance types or vector
-    similarity functions
+# vector-search-platform
 
+Agent-first development for a vector search system.
 
+## Operating Model
+- Coding and execution are done by agents.
+- Product insight, architecture, and design decisions are made by humans.
+- Humans define direction; agents implement against approved plans.
+
+## How We Work
+1. Human and agent discuss scope, tradeoffs, and architecture.
+2. Agent drafts a phase-wise plan.
+3. Agent exports dependency-aware work items (Jira-style tickets).
+4. Work is executed phase by phase, with clear acceptance criteria.
+
+## Current Direction
+- Build a multi-algorithm vector search service.
+- Start with `hnsw-core` as the first ANN algorithm.
+- Expose a serving layer that can evolve from single-node to distributed scatter-gather.
+
+## Principles
+- Keep implementation clean and readable.
+- Prioritize correctness, tests, and reproducibility.
+- Make contracts explicit before parallel execution.
+
+## References
+- HNSW paper: https://arxiv.org/pdf/1603.09320
+- Practical explainer: https://www.pinecone.io/learn/series/faiss/hnsw/
