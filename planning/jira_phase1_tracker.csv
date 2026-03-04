@@ -6,6 +6,6 @@ P1-03,done,P1-00,agent-1,wt-p1-03,ticket/P1-03,local-merge,3b1e437,pass,yes,2026
 P1-04,done,P1-00,agent-1,wt-p1-04,ticket/P1-04,local-merge,5b5e9fb,pass,yes,2026-03-04T01:00:00Z,Merged query/status/snapshot API scaffold and tests; full suite passed.
 P1-05,done,P1-00,agent-1,wt-p1-05,ticket/P1-05,local-merge,0bfd994,pass,yes,2026-03-04T01:30:00Z,Merged SQLite queue worker with /vectors and /jobs APIs; full suite passed.
 P1-06,done,P1-00,agent-1,wt-p1-06,ticket/P1-06,local-merge,3176906,pass,yes,2026-03-04T01:45:00Z,Merged deterministic synthetic data, brute-force baseline, and recall@k QA utilities.
-P1-07,todo,P1-01|P1-03|P1-04|P1-05,unassigned,wt-cli,, , ,pending,no,,
+P1-07,in_progress,P1-01|P1-03|P1-04|P1-05,agent-1,wt-p1-07,ticket/P1-07, , ,pending,no,2026-03-04T01:47:00Z,Starting operational CLI implementation and API wiring.
 P1-08,todo,P1-04|P1-05|P1-06|P1-07,unassigned,wt-qa,, , ,pending,no,,
 P1-09,todo,P1-01|P1-04|P1-05,unassigned,wt-qa,, , ,pending,no,,
