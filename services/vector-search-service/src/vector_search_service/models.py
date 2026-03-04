@@ -31,5 +31,19 @@ class IngestRequest(BaseModel):
     vectors: list[VectorRecord]
 
 
+class IngestResponse(BaseModel):
+    job_id: str
+    queued: int
+
+
+class JobResponse(BaseModel):
+    job_id: str
+    status: str
+    applied: int
+    error: str | None
+    created_at: str
+    updated_at: str
+
+
 class SnapshotRequest(BaseModel):
     path: str

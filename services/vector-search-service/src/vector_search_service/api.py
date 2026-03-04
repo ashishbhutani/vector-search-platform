@@ -2,18 +2,52 @@
 
 from __future__ import annotations
 
+from contextlib import asynccontextmanager
+
 from fastapi import FastAPI, HTTPException
 
-from .models import QueryRequest, QueryResponse, SnapshotRequest
+from .models import (
+    IngestRequest,
+    IngestResponse,
+    JobResponse,
+    QueryRequest,
+    QueryResponse,
+    SnapshotRequest,
+)
+from .queue_sqlite import SQLiteIngestQueue
 from .state import ServiceState
+from .worker import IngestWorker
 
 
-def create_app(state: ServiceState) -> FastAPI:
-    app = FastAPI(title="vector-search-service", version="0.1.0")
+def create_app(
+    state: ServiceState,
+    *,
+    queue_db_path: str = ":memory:",
+    start_worker: bool = False,
+) -> FastAPI:
+    queue = SQLiteIngestQueue(queue_db_path)
+    worker = IngestWorker(queue=queue, state=state)
+
+    if start_worker:
+        worker.start()
+
+    @asynccontextmanager
+    async def lifespan(_: FastAPI):
+        try:
+            yield
+        finally:
+            worker.stop()
+
+    app = FastAPI(title="vector-search-service", version="0.1.0", lifespan=lifespan)
+    app.state.ingest_queue = queue
+    app.state.ingest_worker = worker
 
     @app.get("/status")
     def status() -> dict[str, object]:
-        return state.status_payload()
+        return state.status_payload(
+            queue_depth=queue.queue_depth(),
+            worker_status=worker.status(),
+        )
 
     @app.post("/query", response_model=QueryResponse)
     def query(request: QueryRequest) -> QueryResponse:
@@ -32,6 +66,22 @@ def create_app(state: ServiceState) -> FastAPI:
             index_version=state.index_version,
             partial_results=False,
         )
+
+    @app.post("/vectors", response_model=IngestResponse)
+    def vectors(request: IngestRequest) -> IngestResponse:
+        payload = [{"id": record.id, "vector": record.vector} for record in request.vectors]
+        try:
+            job_id, queued = queue.enqueue(payload)
+        except ValueError as exc:
+            raise HTTPException(status_code=400, detail=str(exc)) from exc
+        return IngestResponse(job_id=job_id, queued=queued)
+
+    @app.get("/jobs/{job_id}", response_model=JobResponse)
+    def get_job(job_id: str) -> JobResponse:
+        job = queue.get_job(job_id)
+        if job is None:
+            raise HTTPException(status_code=404, detail="job not found")
+        return JobResponse(**job)
 
     @app.post("/snapshot")
     def snapshot(request: SnapshotRequest) -> dict[str, object]:
