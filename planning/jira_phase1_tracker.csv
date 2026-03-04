@@ -3,7 +3,7 @@ P1-00,done,,agent-1,wt-p1-00,ticket/P1-00,local-merge,2c3ecb8,pass,yes,2026-03-0
 P1-01,done,P1-00,agent-1,wt-p1-01,ticket/P1-01,local-merge,6f6fd73,pass,yes,2026-03-04T00:35:00Z,Merged core add/search behavior and tests; full suite passed.
 P1-02,done,P1-00,agent-1,wt-p1-02,ticket/P1-02,local-merge,cdbb2c0,pass,yes,2026-03-04T00:20:00Z,Merged metrics implementation and validation tests; full suite passed.
 P1-03,done,P1-00,agent-1,wt-p1-03,ticket/P1-03,local-merge,3b1e437,pass,yes,2026-03-04T00:48:00Z,Merged snapshot save/load with metadata compatibility checks; full suite passed.
-P1-04,in_progress,P1-00,agent-1,wt-p1-04,ticket/P1-04, , ,pending,no,2026-03-04T00:50:00Z,Starting service API scaffold with query and status endpoints.
+P1-04,done,P1-00,agent-1,wt-p1-04,ticket/P1-04,local-merge,5b5e9fb,pass,yes,2026-03-04T01:00:00Z,Merged query/status/snapshot API scaffold and tests; full suite passed.
 P1-05,todo,P1-00,unassigned,wt-service-ingest,, , ,pending,no,,
 P1-06,todo,P1-00,unassigned,wt-qa,, , ,pending,no,,
 P1-07,todo,P1-01|P1-03|P1-04|P1-05,unassigned,wt-cli,, , ,pending,no,,
