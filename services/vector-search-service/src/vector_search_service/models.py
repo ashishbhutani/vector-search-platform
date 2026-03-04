@@ -2,13 +2,13 @@
 
 from __future__ import annotations
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 
 class QueryRequest(BaseModel):
     vector: list[float]
-    k: int
-    ef_search: int | None = None
+    k: int = Field(gt=0)
+    ef_search: int | None = Field(default=None, gt=0)
 
 
 class Neighbor(BaseModel):
@@ -29,3 +29,7 @@ class VectorRecord(BaseModel):
 
 class IngestRequest(BaseModel):
     vectors: list[VectorRecord]
+
+
+class SnapshotRequest(BaseModel):
+    path: str
