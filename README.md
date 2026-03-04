@@ -18,6 +18,61 @@ Agent-first development for a vector search system.
 - Start with `hnsw-core` as the first ANN algorithm.
 - Expose a serving layer that can evolve from single-node to distributed scatter-gather.
 
+## Architecture
+- `algos/hnsw-core`: algorithm package with vector distance functions, index API, and snapshot serialization.
+- `services/vector-search-service`: service package with HTTP API and CLI surface.
+- `planning/`: execution artifacts (phase plans, Jira-style tickets, dependencies, trackers).
+
+### Index Lifecycle (current and planned)
+1. **Offline bootstrap build**
+- Vectors are read from files (planned JSONL input) and used to build an index before serving.
+- Initial index artifact is saved as a snapshot.
+
+2. **Serve from prebuilt index**
+- Service starts by loading the snapshot into memory.
+- Queries run against the in-memory index for low-latency search.
+
+3. **Live vector addition while serving**
+- New vectors are added without full rebuild.
+- Visibility model is async/eventual in service mode: searchable once ingestion job is applied.
+- Single-node local API scaffolding is already in place; queued ingestion pipeline is the next ticketed step.
+
+4. **Snapshot behavior**
+- **Current:** manual snapshot endpoint and core save/load are implemented.
+- **Planned:** periodic checkpointing and explicit snapshot command, including post-ingest state persistence.
+- **Future distributed:** shard-level snapshots plus coordinated restore flows.
+
+### Runtime Model (current)
+- In-process index (`HNSWIndex`) is loaded by the service.
+- HTTP API includes `status`, `query`, and `snapshot` scaffolding.
+- Full distributed scatter-gather mode is planned in later phases.
+
+### Distributed Architecture Decisions (planned)
+- Sharding is strategy-based and configurable.
+  - `hash_tenant_or_doc`
+  - `hash_vector_id`
+  - `semantic_lsh` (initial semantic strategy)
+- Routing interface is explicit:
+  - `route_for_ingest(...)` decides vector placement shard.
+  - `route_for_query(...)` decides shard fanout for reads.
+- Query execution follows scatter-gather.
+  - Gateway/combiner fans out to shard nodes.
+  - Shards run ANN independently.
+  - Combiner merges shard top-k into global top-k.
+- Fanout modes:
+  - baseline `broadcast_all`
+  - semantic `top_n` shard groups
+- Replication direction:
+  - target model is primary + read replicas per shard.
+  - writes go to primary; reads can be replica-aware in later phase.
+
+## Current Capabilities
+- Add/search/search_batch support through `hnsw-core` API.
+- Metrics: `l2`, `cosine`, `dot` (distance-like scoring).
+- Snapshot save/load with metadata and format-version checks.
+- Basic service state + API tests for status/query/snapshot flow.
+- Phase-based tracker system for multi-agent execution.
+
 ## Principles
 - Keep implementation clean and readable.
 - Prioritize correctness, tests, and reproducibility.
