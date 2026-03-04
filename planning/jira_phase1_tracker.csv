@@ -7,5 +7,5 @@ P1-04,done,P1-00,agent-1,wt-p1-04,ticket/P1-04,local-merge,5b5e9fb,pass,yes,2026
 P1-05,done,P1-00,agent-1,wt-p1-05,ticket/P1-05,local-merge,0bfd994,pass,yes,2026-03-04T01:30:00Z,Merged SQLite queue worker with /vectors and /jobs APIs; full suite passed.
 P1-06,done,P1-00,agent-1,wt-p1-06,ticket/P1-06,local-merge,3176906,pass,yes,2026-03-04T01:45:00Z,Merged deterministic synthetic data, brute-force baseline, and recall@k QA utilities.
 P1-07,done,P1-01|P1-03|P1-04|P1-05,agent-1,wt-p1-07,ticket/P1-07,local-merge,99a502a,pass,yes,2026-03-04T02:00:00Z,Merged operational CLI commands (build/serve/add/status/snapshot) with tests.
-P1-08,todo,P1-04|P1-05|P1-06|P1-07,unassigned,wt-qa,, , ,pending,no,,
+P1-08,in_progress,P1-04|P1-05|P1-06|P1-07,agent-1,wt-p1-08,ticket/P1-08, , ,pending,no,2026-03-04T02:02:00Z,Starting end-to-end integration coverage for build-serve-add-query flow.
 P1-09,todo,P1-01|P1-04|P1-05,unassigned,wt-qa,, , ,pending,no,,
