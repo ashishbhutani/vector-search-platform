@@ -1,6 +1,6 @@
 Key,Status,BlockedBy,Assignee,Worktree,Branch,PRURL,MergeCommit,Tests,DocsUpdated,LastUpdatedUTC,Notes
 P1-00,done,,agent-1,wt-p1-00,ticket/P1-00,local-merge,2c3ecb8,pass,yes,2026-03-04T00:10:00Z,Merged to main; scaffold contracts in place; targeted tests passed with PYTHONPATH.
-P1-01,in_progress,P1-00,agent-1,wt-p1-01,ticket/P1-01, , ,pending,no,2026-03-04T00:22:00Z,Starting core engine implementation.
+P1-01,done,P1-00,agent-1,wt-p1-01,ticket/P1-01,local-merge,6f6fd73,pass,yes,2026-03-04T00:35:00Z,Merged core add/search behavior and tests; full suite passed.
 P1-02,done,P1-00,agent-1,wt-p1-02,ticket/P1-02,local-merge,cdbb2c0,pass,yes,2026-03-04T00:20:00Z,Merged metrics implementation and validation tests; full suite passed.
 P1-03,todo,P1-00,unassigned,wt-core,, , ,pending,no,,
 P1-04,todo,P1-00,unassigned,wt-service-api,, , ,pending,no,,
