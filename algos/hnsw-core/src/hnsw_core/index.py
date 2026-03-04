@@ -8,13 +8,17 @@ this baseline.
 from __future__ import annotations
 
 from dataclasses import dataclass, field
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Literal, Sequence
 
 import numpy as np
 
 from .distance import distance, to_vector
+from .serialize import load_index, save_index
 from .types import VectorId, VectorLike
+
+SNAPSHOT_FORMAT_VERSION = 1
 
 
 @dataclass
@@ -30,11 +34,15 @@ class HNSWIndex:
     _ids: list[VectorId] = field(default_factory=list, init=False, repr=False)
     _id_to_pos: dict[VectorId, int] = field(default_factory=dict, init=False, repr=False)
     _auto_id: int = field(default=0, init=False, repr=False)
+    _index_version: int = field(default=0, init=False, repr=False)
 
     def _next_id(self) -> int:
         next_id = self._auto_id
         self._auto_id += 1
         return next_id
+
+    def _touch(self) -> None:
+        self._index_version += 1
 
     def add(self, vector: VectorLike, id: VectorId | None = None) -> VectorId:
         vec = to_vector(vector, dim=self.dim)
@@ -45,6 +53,7 @@ class HNSWIndex:
         self._id_to_pos[vector_id] = len(self._vectors)
         self._vectors.append(vec)
         self._ids.append(vector_id)
+        self._touch()
         return vector_id
 
     def add_batch(
@@ -92,11 +101,53 @@ class HNSWIndex:
         return [self.search(query=q, k=k, ef_search=ef_search) for q in queries]
 
     def save(self, path: str | Path) -> None:
-        raise NotImplementedError("Implemented in P1-03")
+        payload = {
+            "format_version": SNAPSHOT_FORMAT_VERSION,
+            "algo": "hnsw",
+            "dim": self.dim,
+            "metric": self.metric,
+            "m": self.m,
+            "ef_construction": self.ef_construction,
+            "node_count": len(self._vectors),
+            "index_version": self._index_version,
+            "created_at": datetime.now(timezone.utc).isoformat(),
+            "auto_id": self._auto_id,
+            "ids": self._ids,
+            "vectors": [vector.tolist() for vector in self._vectors],
+        }
+        save_index(path, payload)
 
     @classmethod
     def load(cls, path: str | Path) -> "HNSWIndex":
-        raise NotImplementedError("Implemented in P1-03")
+        payload = load_index(path)
+        format_version = payload.get("format_version")
+        if format_version != SNAPSHOT_FORMAT_VERSION:
+            raise ValueError(
+                f"Unsupported snapshot format_version: {format_version}"
+            )
+
+        index = cls(
+            dim=int(payload["dim"]),
+            metric=payload["metric"],
+            m=int(payload["m"]),
+            ef_construction=int(payload["ef_construction"]),
+        )
+
+        raw_ids = payload.get("ids", [])
+        raw_vectors = payload.get("vectors", [])
+        if len(raw_ids) != len(raw_vectors):
+            raise ValueError("Snapshot ids and vectors length mismatch")
+
+        for i, values in enumerate(raw_vectors):
+            vector = to_vector(values, dim=index.dim)
+            vector_id = raw_ids[i]
+            index._id_to_pos[vector_id] = len(index._vectors)
+            index._ids.append(vector_id)
+            index._vectors.append(vector)
+
+        index._auto_id = int(payload.get("auto_id", len(index._ids)))
+        index._index_version = int(payload.get("index_version", len(index._ids)))
+        return index
 
     def __len__(self) -> int:
         return len(self._vectors)
