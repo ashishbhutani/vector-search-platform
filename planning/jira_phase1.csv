@@ -1,0 +1,11 @@
+Key,Summary,Epic,Description,OwnerRole,ParallelGroup,EstimatePoints,AcceptanceCriteria
+P1-00,Contracts and package skeleton,Phase1-Foundation,Define shared contracts and repo skeleton for core and service packages.,Platform,A,3,All interfaces frozen and approved.
+P1-01,HNSW core engine,Phase1-Foundation,Implement HNSW graph insertion and ANN search in hnsw-core.,Core,A,8,Core correctness tests pass.
+P1-02,Distance metrics and validation,Phase1-Foundation,Implement l2 cosine dot metrics plus dimensionality and argument validation.,Core,A,3,Metric ordering and validation tests pass.
+P1-03,Serialization snapshot load save,Phase1-Foundation,Implement snapshot format writer and loader with compatibility checks.,Core,A,5,Snapshot roundtrip tests pass.
+P1-04,Service API scaffold query and status,Phase1-Service,Create FastAPI service scaffold with query and status endpoints.,Service,B,5,Query and status endpoints pass integration tests.
+P1-05,SQLite queue worker and jobs API,Phase1-Service,Build async ingest queue worker and job lifecycle APIs.,Service,B,8,Jobs transition queued running done failed.
+P1-06,Recall harness and QA utilities,Phase1-QA,Create brute-force baseline utility synthetic dataset generator and recall metrics.,QA,C,5,Recall harness is deterministic and reproducible.
+P1-07,CLI commands build serve add status snapshot,Phase1-Service,Implement operational CLI flows and API integration commands.,Service,B,5,CLI happy-path end-to-end flows pass.
+P1-08,End-to-end integration suite,Phase1-QA,Implement build serve add and query visibility integration tests.,QA,C,5,End-to-end suite is green in CI.
+P1-09,Benchmark scripts for build ingest query,Phase1-QA,Implement benchmark scripts with p50 p95 and throughput outputs.,Perf,C,3,Benchmark report generated and documented.

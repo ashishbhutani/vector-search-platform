@@ -1,0 +1,16 @@
+From,DependencyType,To
+P1-00,blocks,P1-01
+P1-00,blocks,P1-04
+P1-00,blocks,P1-05
+P1-02,blocks,P1-01
+P1-01,blocks,P1-07
+P1-03,blocks,P1-07
+P1-04,blocks,P1-07
+P1-05,blocks,P1-07
+P1-06,blocks,P1-08
+P1-04,blocks,P1-08
+P1-05,blocks,P1-08
+P1-07,blocks,P1-08
+P1-01,blocks,P1-09
+P1-04,blocks,P1-09
+P1-05,blocks,P1-09
