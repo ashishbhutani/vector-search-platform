@@ -23,6 +23,20 @@ Agent-first development for a vector search system.
 - `services/vector-search-service`: service package with HTTP API and CLI surface.
 - `planning/`: execution artifacts (phase plans, Jira-style tickets, dependencies, trackers).
 
+## Planning Docs
+- PRD: [docs/PRD.md](docs/PRD.md)
+- Contracts: [docs/architecture/contracts.md](docs/architecture/contracts.md)
+- Agent handoff: [planning/agent_handoff.md](planning/agent_handoff.md)
+- Tracking guide: [planning/tracking_guide.md](planning/tracking_guide.md)
+- Phase 1 tickets: [planning/jira_phase1.csv](planning/jira_phase1.csv)
+- Phase 1 dependencies: [planning/jira_phase1_dependencies.csv](planning/jira_phase1_dependencies.csv)
+- Phase 1 tracker: [planning/jira_phase1_tracker.csv](planning/jira_phase1_tracker.csv)
+- Phase 2 tickets: [planning/jira_phase2.csv](planning/jira_phase2.csv)
+- Phase 2 dependencies: [planning/jira_phase2_dependencies.csv](planning/jira_phase2_dependencies.csv)
+- Phase 2 tracker: [planning/jira_phase2_tracker.csv](planning/jira_phase2_tracker.csv)
+- Phase 1 parallelization: [planning/parallelization.md](planning/parallelization.md)
+- Phase 2 parallelization: [planning/parallelization_phase2.md](planning/parallelization_phase2.md)
+
 ### Index Lifecycle (current and planned)
 1. **Offline bootstrap build**
 - Vectors are read from files (planned JSONL input) and used to build an index before serving.
