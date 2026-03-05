@@ -1,0 +1,11 @@
+Key,Summary,Epic,Description,OwnerRole,ParallelGroup,EstimatePoints,AcceptanceCriteria
+P3-00,Distributed hardening contracts freeze,Phase3-Hardening,Freeze consistency replica routing and operational SLO contracts before implementation.,Platform,A,3,Phase 3 contracts and non-goals are documented and approved.
+P3-01,Primary and replica shard roles,Phase3-Hardening,Implement shard role model and write path pinned to primary nodes.,Service,A,5,Write path validates primary-only ingestion and role metadata.
+P3-02,Replica-aware query routing,Phase3-Hardening,Add gateway read routing policy to use replicas with primary fallback.,Service,A,8,Replica-aware query routing works and fallback behavior is validated.
+P3-03,Replica health and failover policy,Phase3-Hardening,Implement health checks and failover selection policy for read routing.,Service,A,5,Unhealthy replicas are excluded and failover works in integration tests.
+P3-04,Consistency behavior documentation and tests,Phase3-Hardening,Define and test read-after-write expectations under primary plus replica topology.,Platform,B,5,Consistency contract tests pass and docs are updated.
+P3-05,Load and soak performance harness,Phase3-Perf,Add distributed load tests and soak scenarios for sustained operation.,Perf,B,8,Load and soak reports generated with latency and error metrics.
+P3-06,Operational metrics and dashboards,Phase3-Ops,Expose key metrics and provide dashboard definitions for shard and gateway health.,Ops,B,5,Dashboard spec and metrics coverage satisfy runbook requirements.
+P3-07,Alerts and runbooks,Phase3-Ops,Create alert thresholds escalation guide and operator runbooks for common incidents.,Ops,B,5,Runbooks and alert docs reviewed and actionable.
+P3-08,Release and rollback process,Phase3-Release,Define rollout gates canary checks and rollback steps for distributed deployment.,Release,C,3,Release checklist and rollback playbook are complete.
+P3-09,Phase 3 distributed acceptance suite,Phase3-QA,Create final acceptance suite combining HA performance and failure scenarios.,QA,C,8,Acceptance suite passes and signoff criteria are met.
