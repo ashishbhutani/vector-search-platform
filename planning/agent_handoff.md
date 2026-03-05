@@ -20,6 +20,12 @@ This is the standard brief for orchestrators or humans running parallel delivery
 - Tracker: `planning/jira_phase2_tracker.csv`
 - Parallelization plan: `planning/parallelization_phase2.md`
 
+## Phase 3 Files
+- Ticket list: `planning/jira_phase3.csv`
+- Dependencies: `planning/jira_phase3_dependencies.csv`
+- Tracker: `planning/jira_phase3_tracker.csv`
+- Parallelization plan: `planning/parallelization_phase3.md`
+
 ## Rules for All Agents
 - Do not change frozen contracts without a dedicated contract-change ticket.
 - Stay within assigned ticket scope and ownership boundaries.

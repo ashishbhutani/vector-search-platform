@@ -1,0 +1,11 @@
+Key,Status,BlockedBy,Assignee,Worktree,Branch,PRURL,MergeCommit,Tests,DocsUpdated,LastUpdatedUTC,Notes
+P3-00,todo,,unassigned,wt-p3-foundation,, , ,pending,n/a,,
+P3-01,todo,P3-00,unassigned,wt-p3-replica-core,, , ,pending,no,,
+P3-02,todo,P3-00|P3-01|P3-03,unassigned,wt-p3-gateway,, , ,pending,no,,
+P3-03,todo,,unassigned,wt-p3-gateway,, , ,pending,no,,
+P3-04,todo,P3-00|P3-01,unassigned,wt-p3-consistency,, , ,pending,yes,,
+P3-05,todo,P3-02,unassigned,wt-p3-perf,, , ,pending,no,,
+P3-06,todo,,unassigned,wt-p3-ops,, , ,pending,yes,,
+P3-07,todo,P3-06,unassigned,wt-p3-ops,, , ,pending,yes,,
+P3-08,todo,P3-05|P3-07,unassigned,wt-p3-release,, , ,pending,yes,,
+P3-09,todo,P3-02|P3-03|P3-04|P3-05|P3-08,unassigned,wt-p3-qa,, , ,pending,no,,

@@ -34,8 +34,12 @@ Agent-first development for a vector search system.
 - Phase 2 tickets: [planning/jira_phase2.csv](https://github.com/ashishbhutani/vector-search-platform/blob/main/planning/jira_phase2.csv)
 - Phase 2 dependencies: [planning/jira_phase2_dependencies.csv](https://github.com/ashishbhutani/vector-search-platform/blob/main/planning/jira_phase2_dependencies.csv)
 - Phase 2 tracker: [planning/jira_phase2_tracker.csv](https://github.com/ashishbhutani/vector-search-platform/blob/main/planning/jira_phase2_tracker.csv)
+- Phase 3 tickets: [planning/jira_phase3.csv](https://github.com/ashishbhutani/vector-search-platform/blob/main/planning/jira_phase3.csv)
+- Phase 3 dependencies: [planning/jira_phase3_dependencies.csv](https://github.com/ashishbhutani/vector-search-platform/blob/main/planning/jira_phase3_dependencies.csv)
+- Phase 3 tracker: [planning/jira_phase3_tracker.csv](https://github.com/ashishbhutani/vector-search-platform/blob/main/planning/jira_phase3_tracker.csv)
 - Phase 1 parallelization: [planning/parallelization.md](https://github.com/ashishbhutani/vector-search-platform/blob/main/planning/parallelization.md)
 - Phase 2 parallelization: [planning/parallelization_phase2.md](https://github.com/ashishbhutani/vector-search-platform/blob/main/planning/parallelization_phase2.md)
+- Phase 3 parallelization: [planning/parallelization_phase3.md](https://github.com/ashishbhutani/vector-search-platform/blob/main/planning/parallelization_phase3.md)
 
 ### Index Lifecycle (current and planned)
 1. **Offline bootstrap build**
