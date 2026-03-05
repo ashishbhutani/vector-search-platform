@@ -24,6 +24,7 @@ Agent-first development for a vector search system.
 - `planning/`: execution artifacts (phase plans, Jira-style tickets, dependencies, trackers).
 
 ## Planning Docs
+- Reusable planning/orchestration toolkit (external repo): [agent-project-os](https://github.com/ashishbhutani/agent-project-os)
 - PRD: [docs/PRD.md](https://github.com/ashishbhutani/vector-search-platform/blob/main/docs/PRD.md)
 - Contracts: [docs/architecture/contracts.md](https://github.com/ashishbhutani/vector-search-platform/blob/main/docs/architecture/contracts.md)
 - Agent handoff: [planning/agent_handoff.md](https://github.com/ashishbhutani/vector-search-platform/blob/main/planning/agent_handoff.md)
