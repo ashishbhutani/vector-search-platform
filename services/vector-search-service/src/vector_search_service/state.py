@@ -7,12 +7,16 @@ from datetime import datetime, timezone
 
 from hnsw_core import HNSWIndex
 
+from .routing import RouterConfig, ShardRouter
+
 
 @dataclass
 class ServiceState:
     index: HNSWIndex
     index_version: int = 0
     last_checkpoint_at: str | None = None
+    shard_router: ShardRouter | None = None
+    router_config: RouterConfig = RouterConfig()
 
     def bump_index_version(self, applied_count: int) -> None:
         if applied_count > 0:

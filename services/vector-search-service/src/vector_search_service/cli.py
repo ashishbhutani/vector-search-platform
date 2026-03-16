@@ -13,6 +13,7 @@ import uvicorn
 from hnsw_core import HNSWIndex
 
 from .api import create_app
+from .routing import RouterConfig, create_router
 from .state import ServiceState
 
 
@@ -79,7 +80,17 @@ def command_build(args: argparse.Namespace) -> int:
 def command_serve(args: argparse.Namespace) -> int:
     index = HNSWIndex.load(args.index)
     index_version = int(getattr(index, "_index_version", len(index)))
-    state = ServiceState(index=index, index_version=index_version)
+    router_config = RouterConfig(
+        strategy=args.router_strategy,
+        semantic_top_n=args.router_semantic_top_n,
+        semantic_bootstrap_path=args.router_semantic_bootstrap_path,
+    )
+    state = ServiceState(
+        index=index,
+        index_version=index_version,
+        shard_router=create_router(router_config),
+        router_config=router_config,
+    )
     app = create_app(state, queue_db_path=args.queue_db, start_worker=True)
     uvicorn.run(app, host=args.host, port=args.port)
     return 0
@@ -127,6 +138,18 @@ def build_parser() -> argparse.ArgumentParser:
     serve.add_argument("--host", default="127.0.0.1")
     serve.add_argument("--port", default=8000, type=int)
     serve.add_argument("--queue-db", default="/tmp/vss-ingest.db")
+    serve.add_argument(
+        "--router-strategy",
+        default="broadcast_all",
+        choices=[
+            "broadcast_all",
+            "hash_tenant_or_doc",
+            "hash_vector_id",
+            "semantic_lsh",
+        ],
+    )
+    serve.add_argument("--router-semantic-top-n", default=2, type=int)
+    serve.add_argument("--router-semantic-bootstrap-path", default=None)
     serve.set_defaults(func=command_serve)
 
     add = sub.add_parser("add")

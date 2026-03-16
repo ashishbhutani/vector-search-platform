@@ -22,6 +22,7 @@ def test_status_endpoint(tmp_path: Path) -> None:
     payload = response.json()
     assert payload["index_size"] == 1
     assert payload["index_version"] == 1
+    assert payload["routing_strategy"] == "broadcast_all"
 
 
 def test_query_endpoint(tmp_path: Path) -> None:
