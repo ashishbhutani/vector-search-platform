@@ -65,6 +65,52 @@ class BroadcastAllRouter(ShardRouter):
         return list(shard_ids)
 
 
+class _HashRouterBase(ShardRouter):
+    """Base class for deterministic hash routing strategies."""
+
+    def _routing_key(self, record: VectorRecord) -> str:
+        raise NotImplementedError
+
+    def route_for_ingest(self, record: VectorRecord, shard_count: int) -> str:
+        key = self._routing_key(record)
+        bucket = _stable_bucket(key, shard_count)
+        return f"shard-{bucket}"
+
+    def route_for_query(
+        self,
+        query: QueryRequest,
+        shard_ids: Sequence[str],
+        top_n: int | None = None,
+    ) -> list[str]:
+        del query
+        del top_n
+        return list(shard_ids)
+
+
+class HashVectorIdRouter(_HashRouterBase):
+    """Hash vector id to pick a deterministic ingest shard."""
+
+    def _routing_key(self, record: VectorRecord) -> str:
+        return str(record.id)
+
+
+class HashTenantOrDocRouter(_HashRouterBase):
+    """Hash tenant id when present in record id, otherwise hash full doc id."""
+
+    @staticmethod
+    def _tenant_key_from_id(record_id: str | int) -> str:
+        raw = str(record_id)
+        for sep in (":", "/"):
+            if sep in raw:
+                tenant, _ = raw.split(sep, 1)
+                if tenant:
+                    return tenant
+        return raw
+
+    def _routing_key(self, record: VectorRecord) -> str:
+        return self._tenant_key_from_id(record.id)
+
+
 class _NotImplementedRouter(ShardRouter):
     """Placeholder strategy for follow-up tickets."""
 
@@ -96,11 +142,11 @@ def _create_broadcast_all(_: RouterConfig) -> ShardRouter:
 
 
 def _create_hash_tenant_or_doc(_: RouterConfig) -> ShardRouter:
-    return _NotImplementedRouter("hash_tenant_or_doc")
+    return HashTenantOrDocRouter()
 
 
 def _create_hash_vector_id(_: RouterConfig) -> ShardRouter:
-    return _NotImplementedRouter("hash_vector_id")
+    return HashVectorIdRouter()
 
 
 def _create_semantic_lsh(_: RouterConfig) -> ShardRouter:
