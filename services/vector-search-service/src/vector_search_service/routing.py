@@ -5,6 +5,8 @@ from __future__ import annotations
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
 import hashlib
+import json
+from pathlib import Path
 from typing import Callable, Sequence
 
 from .models import QueryRequest, VectorRecord
@@ -134,6 +136,75 @@ class _NotImplementedRouter(ShardRouter):
         raise NotImplementedError(f"Strategy '{self._strategy_name}' is not implemented yet")
 
 
+class SemanticLSHRouter(ShardRouter):
+    """Semantic top-N routing using a bootstrap centroid artifact."""
+
+    def __init__(self, *, top_n: int, bootstrap_path: str) -> None:
+        if top_n <= 0:
+            raise ValueError("semantic_top_n must be > 0")
+        self._top_n = top_n
+        self._centroids = self._load_centroids(bootstrap_path)
+
+    @staticmethod
+    def _load_centroids(path: str) -> list[tuple[str, list[float]]]:
+        raw = Path(path).read_text(encoding="utf-8")
+        parsed = json.loads(raw)
+        if not isinstance(parsed, dict):
+            raise ValueError("semantic bootstrap artifact must be a JSON object")
+        rows = parsed.get("centroids")
+        if not isinstance(rows, list) or not rows:
+            raise ValueError("semantic bootstrap artifact must include non-empty 'centroids'")
+
+        centroids: list[tuple[str, list[float]]] = []
+        for row in rows:
+            if not isinstance(row, dict):
+                raise ValueError("semantic bootstrap centroid rows must be JSON objects")
+            shard_id = row.get("shard_id")
+            vector = row.get("centroid")
+            if not isinstance(shard_id, str) or not shard_id:
+                raise ValueError("semantic bootstrap centroid requires non-empty 'shard_id'")
+            if not isinstance(vector, list) or not vector:
+                raise ValueError("semantic bootstrap centroid requires non-empty 'centroid'")
+            centroids.append((shard_id, [float(v) for v in vector]))
+        return centroids
+
+    @staticmethod
+    def _l2_sq(a: list[float], b: list[float]) -> float:
+        if len(a) != len(b):
+            raise ValueError("semantic routing vector dimension mismatch")
+        return sum((x - y) * (x - y) for x, y in zip(a, b))
+
+    def _ranked_shards(self, vector: list[float], allowed: set[str] | None = None) -> list[str]:
+        scored: list[tuple[float, str]] = []
+        for shard_id, centroid in self._centroids:
+            if allowed is not None and shard_id not in allowed:
+                continue
+            score = self._l2_sq(vector, centroid)
+            scored.append((score, shard_id))
+        scored.sort(key=lambda item: (item[0], item[1]))
+        return [shard_id for _, shard_id in scored]
+
+    def route_for_ingest(self, record: VectorRecord, shard_count: int) -> str:
+        del shard_count
+        ranked = self._ranked_shards(record.vector)
+        if not ranked:
+            raise ValueError("semantic routing found no candidate shards")
+        return ranked[0]
+
+    def route_for_query(
+        self,
+        query: QueryRequest,
+        shard_ids: Sequence[str],
+        top_n: int | None = None,
+    ) -> list[str]:
+        allowed = set(shard_ids)
+        ranked = self._ranked_shards(query.vector, allowed=allowed)
+        limit = self._top_n if top_n is None else top_n
+        if limit <= 0:
+            return []
+        return ranked[: min(limit, len(ranked))]
+
+
 RouterFactory = Callable[[RouterConfig], ShardRouter]
 
 
@@ -149,8 +220,13 @@ def _create_hash_vector_id(_: RouterConfig) -> ShardRouter:
     return HashVectorIdRouter()
 
 
-def _create_semantic_lsh(_: RouterConfig) -> ShardRouter:
-    return _NotImplementedRouter("semantic_lsh")
+def _create_semantic_lsh(config: RouterConfig) -> ShardRouter:
+    if not config.semantic_bootstrap_path:
+        raise ValueError("semantic_lsh strategy requires --router-semantic-bootstrap-path")
+    return SemanticLSHRouter(
+        top_n=config.semantic_top_n,
+        bootstrap_path=config.semantic_bootstrap_path,
+    )
 
 
 ROUTER_REGISTRY: dict[str, RouterFactory] = {
