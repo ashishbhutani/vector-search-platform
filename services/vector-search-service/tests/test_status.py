@@ -23,6 +23,8 @@ def test_status_endpoint(tmp_path: Path) -> None:
     assert payload["index_size"] == 1
     assert payload["index_version"] == 1
     assert payload["routing_strategy"] == "broadcast_all"
+    assert payload["runtime_role"] == "shard_node"
+    assert payload["shard_id"] == "shard-0"
 
 
 def test_query_endpoint(tmp_path: Path) -> None:

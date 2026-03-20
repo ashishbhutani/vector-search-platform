@@ -20,6 +20,7 @@ class QueryResponse(BaseModel):
     neighbors: list[Neighbor]
     index_version: int
     partial_results: bool = False
+    shard_id: str | None = None
 
 
 class VectorRecord(BaseModel):
