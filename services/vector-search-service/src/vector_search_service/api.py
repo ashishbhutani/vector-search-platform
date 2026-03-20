@@ -15,6 +15,7 @@ from .models import (
     SnapshotRequest,
 )
 from .queue_sqlite import SQLiteIngestQueue
+from .routing import create_router
 from .state import ServiceState
 from .worker import IngestWorker
 
@@ -25,6 +26,9 @@ def create_app(
     queue_db_path: str = ":memory:",
     start_worker: bool = False,
 ) -> FastAPI:
+    if state.shard_router is None:
+        state.shard_router = create_router(state.router_config)
+
     queue = SQLiteIngestQueue(queue_db_path)
     worker = IngestWorker(queue=queue, state=state)
 
@@ -41,13 +45,17 @@ def create_app(
     app = FastAPI(title="vector-search-service", version="0.1.0", lifespan=lifespan)
     app.state.ingest_queue = queue
     app.state.ingest_worker = worker
+    app.state.shard_router = state.shard_router
+    app.state.router_config = state.router_config
 
     @app.get("/status")
     def status() -> dict[str, object]:
-        return state.status_payload(
+        payload = state.status_payload(
             queue_depth=queue.queue_depth(),
             worker_status=worker.status(),
         )
+        payload["routing_strategy"] = state.router_config.strategy
+        return payload
 
     @app.post("/query", response_model=QueryResponse)
     def query(request: QueryRequest) -> QueryResponse:
