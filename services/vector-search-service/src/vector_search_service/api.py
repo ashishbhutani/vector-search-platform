@@ -64,6 +64,9 @@ def create_app(
             worker_status=worker.status(),
         )
         payload["routing_strategy"] = state.router_config.strategy
+        if state.runtime_role == "gateway" and state.shard_map:
+            shard_ids = [entry.shard_id for entry in state.shard_map]
+            payload["gateway_healthy_shard_count"] = len(state.health_registry.healthy_shards(shard_ids))
         return payload
 
     def _refresh_gateway_health() -> None:
